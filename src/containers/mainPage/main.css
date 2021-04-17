@@ -1,0 +1,123 @@
+.main {
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid #afd0e1;
+
+}
+
+.main__listName {
+    width: 25%;
+    padding: 10px;
+}
+
+.main__todo {
+    width: 75%;
+    border-left: 1px solid #afd0e1;
+}
+
+.main__listName__position {
+    display: flex;
+    width: 100%;
+    height: 35px;
+    margin-bottom: 15px;
+}
+
+.main__listName__position:hover {
+    background-color: #F3F6FF;
+    cursor: pointer;
+}
+
+.main__todo__list {
+    display: flex;
+    flex-wrap: wrap;
+}
+.main__listName__addList{
+    height: 35px;
+    margin-left: 15px;
+}
+
+.main__todo__list__position {
+    margin: 10px 10px 0 10px;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    border-bottom: 1px solid #afd0e1;
+}
+
+.main__listName__position__img {
+    width: 35px;
+    height: 35px;
+    margin-left: 15px;
+}
+
+
+
+.main__todo__headImage {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    text-align: center;
+    color: white;
+
+}
+
+#img_title {
+    margin-bottom: 25px;
+    margin-left: 15px;
+    font-family: 'Train One', cursive;
+    font-weight: bold;
+    font-size: 3em;
+    position: absolute;
+    bottom: 8px;
+    left: 16px;
+}
+
+#img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.main__todo__list__position__checkBox{
+    display: flex;
+    width: 20px;
+    height: 40px;
+}
+.main__todo__list__position__text{
+    width: 80%
+}
+.main__todo__list__position__date{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 30%;
+    font-family: 'Roboto', sans-serif;
+}
+.main__todo__add_todo{
+    margin: 10px 10px 20px 10px;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    border-bottom: 1px solid #afd0e1;
+}
+.main__todo__add_todo__button{
+    display: flex;
+    width: 100%;
+
+    height: 100%;
+}
+.main__todo__add_todo__button__text{
+    color: #0d01e1;
+    font-weight: bold;
+
+}
+#btn_img{
+    width: 20px;
+    height: 100%;
+}
+.main__todo__add_todo__button:hover{
+    background-color: #F3F6FF;
+    cursor: pointer;
+    border-radius: 5px;
+}
