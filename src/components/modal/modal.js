@@ -19,13 +19,15 @@ class Modal extends Component {
             fileName: '',
         };
         this.handleChangeDate = this.handleChangeDate.bind(this);
-        this.handleSubmitNewTODO = this.handleSubmitNewTODO.bind(this);
+        this.handleSubmitTODO = this.handleSubmitTODO.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmitNewList = this.handleSubmitNewList.bind(this);
+        this.handleSubmitEditTodo = this.handleSubmitEditTodo.bind(this);
+        this.input = React.createRef();
     }
 
 
-    async handleSubmitNewTODO(event) {
+    async handleSubmitTODO(event) {
         event.preventDefault();
 
         const {text, startDate} = this.state;
@@ -36,6 +38,9 @@ class Modal extends Component {
         this.props.passNewTodo(createdTodo)
         if (createdTodo) {
             this.props.onClose && this.props.onClose(event);
+            this.setState({
+                text: ''
+            })
         }
     }
 
@@ -55,6 +60,9 @@ class Modal extends Component {
             this.props.passNewList(createdList)
             if (createdList) {
                 this.props.onCloseModalList && this.props.onCloseModalList(event)
+                this.setState({
+                    text: ''
+                })
             }
 
         } else {
@@ -73,6 +81,9 @@ class Modal extends Component {
 
                 if (createdList) {
                     this.props.onCloseModalList && this.props.onCloseModalList(event)
+                    this.setState({
+                        text: ''
+                    })
                 }
 
             }
@@ -88,6 +99,7 @@ class Modal extends Component {
     }
 
     handleChangeDate(date) {
+
         this.setState({
             startDate: date,
 
@@ -99,23 +111,49 @@ class Modal extends Component {
         this.setState({...this.state, [e.target.name]: e.target.files[0]});
     };
 
-
     onClose = e => {
 
         this.props.onClose && this.props.onClose(e);
+    };
+
+
+    onCloseEditModal = e => {
+
+        this.props.onCloseChangeModal && this.props.onCloseChangeModal(e);
     };
     onCloseModalList = e => {
 
         this.props.onCloseModalList && this.props.onCloseModalList(e)
     };
 
+    async handleSubmitEditTodo(event) {
+        event.preventDefault();
+
+        console.log(this.props.mainState);
+        const {todoId} = this.props.mainState;
+        const text = this.input.current.value;
+        const {startDate: date} = this.state;
+
+        const result = await axios.put(`${HOST}/todo/${todoId}`, {text, date});
+
+        if (result.data.msg[0] === 1) {
+
+            this.props.onCloseChangeModal && this.props.onCloseChangeModal(event);
+            window.location.reload()
+        }
+
+    }
+
+
     render() {
         //Add new TODO
         if (this.props.show) {
+
             return (
                 <div className={'modalPage'}>
                     <div className={'modalPage_head'}>
-                        <img onClick={this.onClose} id={'btn_img'} src={process.env.PUBLIC_URL + '/cancel.svg'} alt=""/>
+                        <img onClick={this.onClose} className={'btn_img'} src={process.env.PUBLIC_URL + '/cancel.svg'}
+                             alt=""/>
                     </div>
 
                     <div className={'modal_body'}>
@@ -136,7 +174,7 @@ class Modal extends Component {
                                 />
 
                             </div>
-                            <Button className={'modal_body__form__btn'} onClick={this.handleSubmitNewTODO}
+                            <Button className={'modal_body__form__btn'} onClick={this.handleSubmitTODO}
                                     variant="primary">Create</Button>
                         </form>
 
@@ -151,7 +189,8 @@ class Modal extends Component {
             return (
                 <div className={'modalPage'}>
                     <div className={'modalPage_head'}>
-                        <img onClick={this.onCloseModalList} id={'btn_img'} src={process.env.PUBLIC_URL + '/cancel.svg'}
+                        <img onClick={this.onCloseModalList} className={'btn_img'}
+                             src={process.env.PUBLIC_URL + '/cancel.svg'}
                              alt=""/>
                     </div>
 
@@ -165,7 +204,8 @@ class Modal extends Component {
                             </InputGroup>
                             <div className={'modal_body__picker'}>
                                 <Form.Group>
-                                    <Form.File id="exampleFormControlFile1" label="You can upload logo for your list. Only jpg, svg, png file"
+                                    <Form.File id="exampleFormControlFile1"
+                                               label="You can upload logo for your list. Only jpg, svg, png file"
                                                onChange={this.handleFile}
                                                type="file"
                                                name="fileData"
@@ -180,6 +220,45 @@ class Modal extends Component {
                     </div>
                 </div>
             )
+        }
+
+        //Modal page for edit To-Do
+        if (this.props.mainState.showChangeModal) {
+            const {todoText} = this.props.mainState;
+
+
+            return (
+                <div className={'modalPage'}>
+                    <div className={'modalPage_head'}>
+                        <img onClick={this.onCloseEditModal} className={'btn_img'}
+                             src={process.env.PUBLIC_URL + '/cancel.svg'} alt=""/>
+                    </div>
+
+                    <div className={'modal_body'}>
+
+                        <form className={'modal_body__form'} onSubmit={this.handleSubmitEditTodo}>
+                            <InputGroup className="mb-3 modal_body__form__input">
+                                <FormControl ref={this.input} defaultValue={todoText}
+                                             placeholder="Text"
+                                />
+                            </InputGroup>
+                            <div className={'modal_body__picker'}>
+                                <DatePicker selected={this.state.startDate}
+                                            onChange={this.handleChangeDate}
+                                            showTimeSelect
+                                            dateFormat="Pp"
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                />
+
+                            </div>
+                            <input className={'modal_body__form__btn'} type="submit" value={'Submit'}/>
+
+                        </form>
+
+                    </div>
+                </div>
+            );
         }
 
         return null;

@@ -112,7 +112,7 @@
     font-weight: bold;
 
 }
-#btn_img{
+.btn_img{
     width: 20px;
     height: 100%;
 }
@@ -120,4 +120,15 @@
     background-color: #F3F6FF;
     cursor: pointer;
     border-radius: 5px;
+}
+
+.main__todo__list__position__edit{
+    height: 100%;
+    width: 20%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.main__todo__list__position__edit__icon:hover{
+    cursor: pointer;
 }

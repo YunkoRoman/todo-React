@@ -31,10 +31,14 @@ class Main extends Component {
             checked: false,
             showModal: false,
             showNewListModal: false,
+            showChangeModal:false,
             lists: null,
             currentListId: null,
             todoList: null,
-            titleName: ''
+            titleName: '',
+            todoText:'',
+            todoId:null,
+            todoDate:''
         };
         this.handleChange = this.handleChange.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -42,6 +46,8 @@ class Main extends Component {
         this.createNewList = this.createNewList.bind(this);
         this.fetchTodo = this.fetchTodo.bind(this);
         this.createNewTodo = this.createNewTodo.bind(this);
+        this.deleteTodo = this.deleteTodo.bind(this);
+        this.showChangeModal = this.showChangeModal.bind(this);
 
     }
 
@@ -81,6 +87,11 @@ class Main extends Component {
             showNewListModal: !this.state.showNewListModal
         });
     };
+    showChangeModal() {
+        this.setState({
+            showChangeModal: !this.state.showChangeModal
+        });
+    };
 
     createNewList(list) {
 
@@ -96,7 +107,6 @@ class Main extends Component {
     createNewTodo(todo) {
         const {todoList} = this.state;
         todoList.push(todo.data.msg);
-        console.log(todoList);
         const sortArray = todoList.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
         });
@@ -123,12 +133,36 @@ class Main extends Component {
 
     }
 
+    async deleteTodo(id) {
+        const{currentListId, titleName} = this.state;
+        const confirm = window.confirm('Do you want delete this To-Do?');
+        if (confirm) {
+            const result = await axios.delete(`${HOST}/todo/${id}`);
+            if (result.data.msg === 1) {
+                this.fetchTodo(currentListId,titleName)
+            }
+
+        }
+
+    }
+
+    changeTodo(id, text, date ){
+        this.setState({
+            ...this.state,
+            todoId:id,
+            todoText:text,
+            todoDate:date
+        });
+        this.showChangeModal()
+
+    }
+
     renderLists({text, id, fileName}) {
         if (!fileName) {
             return (
                 <div key={id} onClick={() => this.fetchTodo(id, text)} className={'main__listName__position'}>
                     <div className={'main__listName__position__img'}>
-                        <img id={'btn_img'} src={process.env.PUBLIC_URL + '/menu.svg'} alt=""/>
+                        <img className={'btn_img'} src={process.env.PUBLIC_URL + '/menu.svg'} alt=""/>
                     </div>
                     <div className={'textHorCenter'}>
                         <p id={'text'}> {text} </p>
@@ -140,7 +174,7 @@ class Main extends Component {
         return (
             <div key={id} onClick={() => this.fetchTodo(id, text)} className={'main__listName__position'}>
                 <div className={'main__listName__position__img'}>
-                    <img id={'btn_img'} src={`${HOST}/${fileName}`} alt=""/>
+                    <img className={'btn_img'} src={`${HOST}/${fileName}`} alt=""/>
                 </div>
                 <div className={'textHorCenter'}>
                     <p id={'text'}> {text} </p>
@@ -171,6 +205,15 @@ class Main extends Component {
                 <div className={'main__todo__list__position__date'}>
                     <span> {formDate}</span>
                 </div>
+
+                <div className={'main__todo__list__position__edit'}>
+                    <div className={'main__todo__list__position__edit__icon'} onClick={()=> this.changeTodo(id, text, date)}>
+                        <img className={'btn_img'} src={process.env.PUBLIC_URL + '/pencil.svg'} alt=""/>
+                    </div>
+                    <div className={'main__todo__list__position__edit__icon'} onClick={() => this.deleteTodo(id)}>
+                        <img className={'btn_img'} src={process.env.PUBLIC_URL + '/cancel.svg'} alt=""/>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -186,7 +229,8 @@ class Main extends Component {
 
                         <div className={'main__listName__addList'} onClick={this.showNewListModal}>
                             <div className={'main__todo__add_todo__button'}>
-                                <img width={'10px'} id={'btn_img'} src={process.env.PUBLIC_URL + '/plus.svg'} alt=""/>
+                                <img width={'10px'} className={'btn_img'} src={process.env.PUBLIC_URL + '/plus.svg'}
+                                     alt=""/>
                                 <p className={'textHorCenter main__todo__add_todo__button__text'}>New List</p>
                             </div>
                         </div>
@@ -208,7 +252,8 @@ class Main extends Component {
 
                         <div className={(todoList === null) ? 'hidden' : 'main__todo__add_todo'}>
                             <div className={'main__todo__add_todo__button'} onClick={this.showModal}>
-                                <img width={'10px'} id={'btn_img'} src={process.env.PUBLIC_URL + '/plus.svg'} alt=""/>
+                                <img width={'10px'} className={'btn_img'} src={process.env.PUBLIC_URL + '/plus.svg'}
+                                     alt=""/>
                                 <p className={'textHorCenter main__todo__add_todo__button__text'}>New To-Do</p>
                             </div>
                         </div>
@@ -216,7 +261,8 @@ class Main extends Component {
                     </div>
                     <Modal onClose={this.showModal} onCloseModalList={this.showNewListModal}
                            passNewList={this.createNewList} passNewTodo={this.createNewTodo} show={this.state.showModal}
-                           showNewList={this.state.showNewListModal} currentListId={this.state.currentListId}/>
+                           showNewList={this.state.showNewListModal} currentListId={this.state.currentListId}
+                            mainState={this.state} onCloseChangeModal={this.showChangeModal}/>
                 </div>
 
             )
