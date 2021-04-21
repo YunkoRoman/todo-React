@@ -234,6 +234,13 @@ class Main extends Component {
                                 <p className={'textHorCenter main__todo__add_todo__button__text'}>New List</p>
                             </div>
                         </div>
+                        <div className={'main__listName__addList'}>
+                            <div className={'main__todo__add_todo__button'}>
+                                <img width={'10px'} className={'btn_img'} src={process.env.PUBLIC_URL + '/clipboard.svg'}
+                                     alt=""/>
+                                <p className={'textHorCenter main__todo__add_todo__button__text'}>List of done To-Do</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div className={'main__todo'}>

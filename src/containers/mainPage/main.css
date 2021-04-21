@@ -18,7 +18,6 @@
 .main__listName__position {
     display: flex;
     width: 100%;
-    height: 35px;
     margin-bottom: 15px;
 }
 
@@ -39,7 +38,6 @@
 .main__todo__list__position {
     margin: 10px 10px 0 10px;
     width: 100%;
-    height: 40px;
     display: flex;
     border-bottom: 1px solid #afd0e1;
 }
@@ -85,7 +83,8 @@
     height: 40px;
 }
 .main__todo__list__position__text{
-    width: 80%
+    width: 50%;
+    word-wrap: break-word;
 }
 .main__todo__list__position__date{
     display: flex;

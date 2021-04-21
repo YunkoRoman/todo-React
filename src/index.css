@@ -181,6 +181,8 @@ input {
 }
 #text{
   margin-bottom: 0;
+  width: 100%;
+  word-wrap: break-word;
 }
 .hidden{
   visibility: hidden;
